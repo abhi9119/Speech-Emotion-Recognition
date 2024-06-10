@@ -1,97 +1,87 @@
-# Speech Emotion Analyzer
+# Speech Emotion Recognition
+This is a Speech Emotion Recognition based on RAVDESS dataset, project repository for final year project 2024, KLEMSSCET.
 
-* The idea behind creating this project was to build a machine learning model that could detect emotions from the speech we have with each other all the time. Nowadays personalization is something that is needed in all the things we experience everyday. 
+## Abstract:
 
-* So why not have a emotion detector that will guage your emotions and in the future recommend you different things based on your mood. 
-This can be used by multiple industries to offer different services like marketing company suggesting you to buy products based on your emotions, automotive industry can detect the persons emotions and adjust the speed of autonomous cars as required to avoid any collisions etc.
+Speech Emotion Recognition, abbreviated as SER, is the act of attempting to recognize human emotion and the associated 
+affective states from speech. This is capitalizing on the fact that voice often reflects underlying emotion through tone and pitch. 
+Emotion recognition is a rapidly growing research domain in recent years. Unlike humans, machines lack the abilities to perceive 
+and show emotions. But human-computer interaction can be improved by implementing automated emotion recognition, thereby 
+reducing the need of human intervention.
 
-## Analyzing audio signals
-![](images/joomla_speech_prosody.png?raw=true)
+In this project, basic emotions like calm, happy, fearful, disgust etc. are analyzed from emotional speech signals. We use machine learning techniques like Multilayer perceptron Classifier (MLP Classifier) which is used to categorize the given data into respective groups which are non linearly separated. We will also use CNN (Convolutional Neural Networks) and RNN-LSTM model. Mel-frequency cepstrum coefficients (MFCC), chroma and mel features are extracted from the speech signals and used to train the MLP classifier. For achieving this objective, we use python libraries like Librosa, sklearn, pyaudio, numpy and soundfile to analyze the speech modulations and recognize the emotion. 
 
-[©Fabien_Ringeval_PhD_Thesis](https://drive.google.com/file/d/0B2V_I9XKBODhcEtZV1lRWW1fYTg/view).
-<br>
+Using RAVDESS dataset which contains  around 1500 audio file inputs from 24 different actors (12 male and 12 female) who recorded short audios in 8 different emotions, we will train a NLP- based model which will be able to detect among the 8 basic emotions as well as the gender of the speaker i.e. Male voice or Female voice.  
+After training we can deploy this model for predicting with live voices.
 
-### Datasets:
-Made use of two different datasets:
-1. [RAVDESS](https://zenodo.org/record/1188976).
-This dataset includes around 1500 audio file input from 24 different actors. 12 male and 12 female where these actors record short audios in 8 different emotions i.e 1 = neutral, 2 = calm, 3 = happy, 4 = sad, 5 = angry, 6 = fearful, 7 = disgust, 8 = surprised.<br>
-Each audio file is named in such a way that the 7th character is consistent with the different emotions that they represent.
+## Deliverables:
 
-2. [SAVEE](http://kahlan.eps.surrey.ac.uk/savee/Download.html).
-This dataset contains around 500 audio files recorded by 4 different male actors. The first two characters of the file name correspond to the different emotions that the potray. 
+Learn the basics of Python, ML/DL, NLP, librosa, sklearn, etc , Literature Review , analyzing the dataset and Feature extraction. Building and training the model on the training data, followed by testing on test data. And finally, testing the model on live audio input (unseen) and collecting the results:)
 
-## Audio files:
-Tested out the audio files by plotting out the waveform and a spectrogram to see the sample audio files.<br>
-**Waveform**
-![](images/wave.png?raw=true)
-<br>
-<br>
-**Spectrogram**<br>
-![](images/spec.png?raw=true)
-<br>
+## Dataset
+We have used the RAVDESS Dataset for our project. The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS) contains 7356 files (total size: 24.8 GB). The database contains 24 professional actors (12 female, 12 male), vocalizing two lexically-matched statements in a neutral North American accent.
+
+
+Here is the filename identifiers as per the official RAVDESS website:
+
+ * Modality (01 = full-AV, 02 = video-only, 03 = audio-only).
+ * Vocal channel (01 = speech, 02 = song).
+ * Emotion (01 = neutral, 02 = calm, 03 = happy, 04 = sad, 05 = angry, 06 = fearful, 07 = disgust, 08 = surprised).
+ * Emotional intensity (01 = normal, 02 = strong). NOTE: There is no strong intensity for the 'neutral' emotion.
+ * Statement (01 = "Kids are talking by the door", 02 = "Dogs are sitting by the door").
+ * Repetition (01 = 1st repetition, 02 = 2nd repetition).
+ * Actor (01 to 24. Odd numbered actors are male, even numbered actors are female).
+ 
+So, here's an example of an audio filename. 02-01-06-01-02-01-12.mp4. This means the meta data for the audio file is:
+
+- Video-only (02)
+- Speech (01)
+- Fearful (06)
+- Normal intensity (01)
+- Statement "dogs" (02)
+- 1st Repetition (01)
+- 12th Actor (12) - Female (as the actor ID number is even)
 
 ## Feature Extraction
-The next step involves extracting the features from the audio files which will help our model learn between these audio files.
-For feature extraction we make use of the [**LibROSA**](https://librosa.github.io/librosa/) library in python which is one of the libraries used for audio analysis. 
-<br>
-![](images/feature.png?raw=true)
-<br>
-* Here there are some things to note. While extracting the features, all the audio files have been timed for 3 seconds to get equal number of features. 
-* The sampling rate of each file is doubled keeping sampling frequency constant to get more features which will help classify the audio file when the size of dataset is small.
-<br>
 
-**The extracted features looks as follows**
 
-<br>
+Feature extraction is important in modeling because it converts audio files into a format that can be understood by models.
 
-![](images/feature2.png?raw=true)
+1. MFCC (Mel-Frequency Cepstral Coefficients)- It is a representation of the short-term power spectrum of a sound, based on linear cosine transformation of a log power spectrum on nonlinear mel frequency scale.
+2. Chroma- It closely relates to the 12 different pitch classes. It captures harmonic and melodic characteristics of music.
+3. Mel Scale- It is a perceptual scale of pitches judged by listeners to be in equal in distance from one another. 
+4. Zero Crossing Rate (ZCR)- It is the rate at which a signal changes from positive to zero to negative or from negative to zero to positive.
+5. Spectral Centroid- It is the center of 'gravity' of the spectrum. It is a measure used in digital signal processing to characterize a spectrum.
 
-<br>
 
-These are array of values with lables appended to them. 
+    
+## Model Implementation
 
-## Building Models
+**MLP (Multi-Layer Perceptron) Model:**
+The  arrays containing features of the audios are given as an input to the MLP Classifier that has been  initialized. The Classifier identifies different categories in the datasets  and classifies them into different emotions.
 
-Since the project is a classification problem, **Convolution Neural Network** seems the obivious choice. We also built **Multilayer perceptrons** and **Long Short Term Memory** models but they under-performed with very low accuracies which couldn't pass the test while predicting the right emotions.
 
-Building and tuning a model is a very time consuming process. The idea is to always start small without adding too many layers just for the sake of making it complex. After testing out with layers, the model which gave the max validation accuracy against test data was little more than 70%
-<br>
-<br>
-![](images/cnn.png?raw=true)
-<br>
+**Convolutional Neural Network (CNN):**
+The activation layer called as the RELU layer is  followed by the pooling layer. The specificity of the CNN layer is  learnt from the functions of the activation layer.
 
-## Predictions
 
-After tuning the model, tested it out by predicting the emotions for the test data. For a model with the given accuracy these are a sample of the actual vs predicted values.
-<br>
-<br>
-![](images/predict.png?raw=true)
-<br>
+**RNN-LSTM Model:**
+We used RMSProp optimizer to train the RNN-LSTM model, all  the experiments were carried with a fixed learning rate. Batch  Normalization is applied over every layer and the  activation function used is the SoftMax activation function.
 
-## Testing out with live voices.
-In order to test out our model on voices that were completely different than what we have in our training and test data, we recorded our own voices with dfferent emotions and predicted the outcomes. You can see the results below:
-The audio contained a male voice which said **"This coffee sucks"** in a angry tone.
-<br>
-![](images/livevoice.PNG?raw=true)
-<br>
-<br>
-![](images/livevoice2.PNG?raw=true)
-<br>
+## Results:
+  - CNN model gave an accuracy of 68% 
+  - LSTM model gave an accuracy of 43%
+  - MLP model gave an accuracy of 40%
 
-### As you can see that the model has predicted the male voice and emotion very accurately in the image above.
 
-## NOTE: If you are using the model directly and want to decode the output ranging from 0 to 9 then the following list will help you.
-
-0 - female_angry <br>
-1 - female_calm <br>
-2 - female_fearful <br>
-3 - female_happy <br>
-4 - female_sad <br>
-5 - male_angry <br>
-6 - male_calm <br>
-7 - male_fearful <br>
-8 - male_happy <br>
-9 - male_sad <br>
-
-## Conclusion
-Building the model was a challenging task as it involved lot of trail and error methods, tuning etc. The model is very well trained to distinguish between male and female voices and it distinguishes with 100% accuracy. The model was tuned to detect emotions with more than 70% accuracy. Accuracy can be increased by including more audio files for training.
+## References
+1. Python basics: https://github.com/bcs-iitk/BCS_Workshop_Apr_20/tree/master/Python_Tutorial. 
+-Shashi Kant Gupta, founder BCS. 
+2. Intro to ML: https://youtu.be/KNAWp2S3w94 , Basic CV with ML: https://youtu.be/bemDFpNooA8 
+3. Intro to CNN: https://youtu.be/x_VrgWTKkiM , Intro to DL: https://youtu.be/njKP3FqW3Sk
+4. Feature Extraction: https://www.kaggle.com/ashishpatel26/feature-extraction-from-audio , https://youtube.com/playlist?list=PL-wATfeyAMNqIee7cH3q1bh4QJFAaeNv0 ,           https://medium.com/analytics-vidhya/understanding-the-mel-spectrogram-fca2afa2ce53
+5. Research paper: https://ijesc.org/upload/bc86f90a8f1d88219646b9072e155be4.Speech%20Emotion%20Recognition%20using%20MLP%20Classifier.pdf
+6. Research Paper on SER using CNN: https://www.researchgate.net/publication/341922737_Multimodal_speech_emotion_recognition_and_classification_using_convolutional_neural_network_techniques
+7. K Fold Cross Validation: https://machinelearningmastery.com/k-fold-cross-validation/
+8. Research Paper for LSTM Model in SER: http://www.jcreview.com/fulltext/197-1594073480.pdf?1625291827
+9. Dataset: https://www.kaggle.com/uwrfkaggler/ravdess-emotional-speech-audio.
